@@ -150,10 +150,27 @@ export class LmChatSSI implements INodeType {
 					args.request.path = '/chat/n8n-stream';
 
 					if (args.request.body) {
-						const body = JSON.parse(args.request.body.toString());
-						body.llmKey = modelName;
-						args.request.body = JSON.stringify(body);
-						args.request.headers['content-length'] = args.request.body.length.toString();
+						try {
+							const bodyString =
+								typeof args.request.body === 'string'
+									? args.request.body
+									: args.request.body.toString('utf-8');
+
+							const body = JSON.parse(bodyString);
+
+							// Add llmKey without modifying the rest of the structure
+							body.llmKey = modelName;
+
+							const newBodyString = JSON.stringify(body);
+
+							args.request.body = Buffer.from(newBodyString, 'utf-8');
+							args.request.headers['content-length'] = Buffer.byteLength(
+								newBodyString,
+								'utf-8',
+							).toString();
+						} catch (error) {
+							console.error('Error processing request body:', error);
+						}
 					}
 				}
 				return next(args);
