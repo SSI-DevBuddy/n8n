@@ -3,7 +3,6 @@ import type { IAuthenticateGeneric, ICredentialType, INodeProperties } from 'n8n
 export class SsiDevBuddyApi implements ICredentialType {
 	name = 'ssiDevBuddyApi';
 	displayName = 'SSI DevBuddy API';
-	documentationUrl = 'https://docs.ssi-devbuddy.com';
 	properties: INodeProperties[] = [
 		{
 			displayName: 'API Key',
@@ -20,7 +19,7 @@ export class SsiDevBuddyApi implements ICredentialType {
 			type: 'string',
 			default: 'http://127.0.0.1:55361',
 			required: true,
-			description: 'URL of the Python chat server',
+			description: 'URL of the chat server',
 			placeholder: 'http://127.0.0.1:55361',
 		},
 	];
