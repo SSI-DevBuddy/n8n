@@ -95,6 +95,20 @@ export class LoadNodesAndCredentials {
 			this.excludeNodes.push('n8n-nodes-base.dynamicCredentialCheck');
 		}
 
+		// Conditional SSI DevBuddy node loading based on APP_MODE
+		const APP_MODE = process.env.APP_MODE || 'cloud';
+		this.excludeNodes = this.excludeNodes ?? [];
+
+		if (APP_MODE === 'cloud') {
+			this.excludeNodes.push('@n8n/n8n-nodes-langchain.lmChatSSIvLLM');
+			this.logger.info('APP_MODE=cloud: Using SSI DevBuddy with AWS Bedrock');
+		} else if (APP_MODE === 'on-premises') {
+			this.excludeNodes.push('@n8n/n8n-nodes-langchain.lmChatSSI');
+			this.logger.info('APP_MODE=on-premises: Using SSI DevBuddy with vLLM');
+		} else {
+			this.logger.warn(`Unknown APP_MODE: ${APP_MODE}. Both SSI DevBuddy nodes will be loaded.`);
+		}
+
 		// Load nodes from `n8n-nodes-base`
 		const basePathsToScan = [
 			// In case "n8n" package is in same node_modules folder.
