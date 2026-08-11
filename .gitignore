@@ -10,7 +10,6 @@ npm-debug.log*
 yarn.lock
 google-generated-credentials.json
 _START_PACKAGE
-.env
 .env.local
 .vscode/*
 !.claude
